@@ -102,7 +102,7 @@ app.post('/webhook', async (req, res) => {
 
     console.log(createdAt);
     const headers = Object.keys(answerData);
-    let sid, gid;
+    let sid, gid, tgGroupId;
     for (let header of headers) {
       let valueString = valueStringFromAnswerData(answerData, header);
 
@@ -114,6 +114,9 @@ app.post('/webhook', async (req, res) => {
       }
       if (header == 'gid') {
         gid = valueString;
+      }
+      if (header == 'tgGroupId') {
+        tgGroupId = valueString;
       }
     }
 
@@ -164,16 +167,18 @@ app.post('/webhook', async (req, res) => {
 
 
         // отправим сообщение в телеграм
-        try {
-          let messageText =
-            `Ответ с формы *${sheetName}*:\n\n` +
-            answerArray.map(a => `*${a.headerRus}:* ${a.value}`).join('\n') +
-            `\n\n[Открыть таблицу](${sheetLink})`;
-          await bot.sendMessage(process.env.GROUP_ID, messageText, {
-            parse_mode: 'Markdown'
-          });
-        } catch (e) {
-          bot.sendMessage(process.env.GROUP_ID, `Получен с формы *${sheetName}*:\n\n...\n\n[Открыть таблицу](${sheetLink})`);
+        if (tgGroupId) {
+          try {
+            let messageText =
+              `Ответ с формы *${sheetName}*:\n\n` +
+              answerArray.map(a => `*${a.headerRus}:* ${a.value}`).join('\n') +
+              `\n\n[Открыть таблицу](${sheetLink})`;
+            await bot.sendMessage(tgGroupId, messageText, {
+              parse_mode: 'Markdown'
+            });
+          } catch (e) {
+            bot.sendMessage(tgGroupId, `Получен с формы *${sheetName}*:\n\n...\n\n[Открыть таблицу](${sheetLink})`);
+          }
         }
 
         // Значения, которые будут записаны на лист sheetName в строку rowNumber
