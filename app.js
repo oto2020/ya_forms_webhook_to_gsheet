@@ -19,12 +19,12 @@ function valueStringFromAnswerData(answerData, header) {
 
   // если значения выбора
   if (answerType == 'answer_choices') {
-    return qv.value.map(v => v.text).join(', ');
+    return qv.value.map(v => v.text).join('\n');
   }
 
   // если файл(ы)
   else if (answerType == 'answer_files') {
-    return qv.value.map(v => v.name).join(' | ');
+    return qv.value.map(v => v.name).join('\n');
   }
 
   // если булево
@@ -131,7 +131,7 @@ app.post('/webhook', async (req, res) => {
         // найдем первую свободную строку
         let rowNumber = await GoogleProcessor.findFirstEmptyRow();
 
-        const sheetLink = `https://docs.google.com/spreadsheets/d/${sid}/edit#gid=${gid}`;
+        const sheetLink = `https://docs.google.com/spreadsheets/d/${sid}/edit#gid=${gid}&range=A${rowNumber}`;
         console.log(`\nПолучен ответ из яндекс.форм, записываю в строку: ${rowNumber} документа:\n ${sheetLink}`);
 
         // Собираем Массив с овтетами
