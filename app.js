@@ -85,6 +85,27 @@ function expandAnswerArray(answerArray) {
   }
   return rowValues;
 }
+
+// удаляет форматирование телеграм
+function removeTelegramFormatting(text) {
+  return text
+    // Заменить переносы строк на пробелы
+    .replace(/[\r\n]+/g, ' ')
+    // MarkdownV2 спецсимволы
+    .replace(/[*_~`[\]()><#+\-=|{}.!\\]/g, ' ')
+    // Блок кода (```код```)
+    .replace(/```[^```]*```/g, ' ')
+    // Моноширинный текст (`код`)
+    .replace(/`[^`]*`/g, ' ')
+    // Markdown-ссылки [текст](url)
+    .replace(/\[.*?\]\(.*?\)/g, ' ')
+    // HTML-теги <b>, <i>, <code>, <a> и прочие
+    .replace(/<\/?[^>]+(>|$)/g, ' ')
+    // Сжать множественные пробелы
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 app.post('/webhook', async (req, res) => {
   console.log('Получены данные от Яндекс Формы:');
 
@@ -154,6 +175,7 @@ app.post('/webhook', async (req, res) => {
           let columnNumber = headerColumnNumber.columnNumber;
           let header = headerColumnNumber.value;
           let value = valueStringFromAnswerData(answerData, header);
+          value = removeTelegramFormatting(value);
           answerArray.push({
             header,                                               // заголовок eng
             headerRus: headerRusArray[columnNumber - 1],          // заголовок rus
