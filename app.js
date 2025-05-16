@@ -86,25 +86,12 @@ function expandAnswerArray(answerArray) {
   return rowValues;
 }
 
-// удаляет форматирование телеграм
-function removeTelegramFormatting(text) {
-  return text
-    // Заменяем реальные переводы строк и литеральные "\n", "\r" на пробел
-    .replace(/[\r\n]+/g, ' ')
-    .replace(/\\[rn]/g, ' ')
-    // Удаляем только те спецсимволы, которые влияют на Telegram-разметку
-    .replace(/[*_~`[\]()>#\+\-=|{}!\\]/g, ' ')
-    // Удаляем Markdown-ссылки [text](url)
-    .replace(/\[.*?\]\(.*?\)/g, ' ')
-    // Удаляем блоки кода: ```code``` и `code`
-    .replace(/```[^```]*```/g, ' ')
-    .replace(/`[^`]*`/g, ' ')
-    // Удаляем HTML-теги
-    .replace(/<\/?[^>]+>/g, ' ')
-    // Сжимаем лишние пробелы
-    .replace(/\s+/g, ' ')
-    .trim();
+// экранирует форматирование телеграм не затрагивая Url
+function escapeMarkdownV2Safe(text, isUrl = false) {
+  if (isUrl) return text;
+  return text.replace(/([_*\[\]()~`>#+\-=|{}.!\\])/g, '\\$1');
 }
+
 
 
 
@@ -177,7 +164,6 @@ app.post('/webhook', async (req, res) => {
           let columnNumber = headerColumnNumber.columnNumber;
           let header = headerColumnNumber.value;
           let value = valueStringFromAnswerData(answerData, header);
-          value = removeTelegramFormatting(value);
           answerArray.push({
             header,                                               // заголовок eng
             headerRus: headerRusArray[columnNumber - 1],          // заголовок rus
@@ -193,17 +179,29 @@ app.post('/webhook', async (req, res) => {
         // отправим сообщение в телеграм
         if (tgGroupId) {
           try {
-            let messageText =
-              `Ответ с формы *${sheetName}*:\n\n` +
-              answerArray.map(a => `*${a.headerRus}:* ${a.value}`).join('\n') +
-              `\n\n[Открыть таблицу](${sheetLink})`;
+            const messageText =
+              `Ответ с формы *${escapeMarkdownV2Safe(sheetName)}*:\n\n` +
+              answerArray
+                .map(a =>
+                  `*${escapeMarkdownV2Safe(a.headerRus)}:* ${escapeMarkdownV2Safe(a.value)}`
+                ).join('\n') +
+              `\n\n[Открыть таблицу](${escapeMarkdownV2Safe(sheetLink, true)})`;
+
             await bot.sendMessage(tgGroupId, messageText, {
-              parse_mode: 'Markdown'
+              parse_mode: 'MarkdownV2'
             });
+
           } catch (e) {
-            bot.sendMessage(tgGroupId, `Получен с формы *${sheetName}*:\n\n...\n\n[Открыть таблицу](${sheetLink})`);
+            const fallbackMessage =
+              `Получен с формы *${escapeMarkdownV2Safe(sheetName)}*:\n\n...` +
+              `\n\n[Открыть таблицу](${escapeMarkdownV2Safe(sheetLink, true)})`;
+
+            await bot.sendMessage(tgGroupId, fallbackMessage, {
+              parse_mode: 'MarkdownV2'
+            });
           }
         }
+
 
         // Значения, которые будут записаны на лист sheetName в строку rowNumber
         let valuesRow = expandAnswerArray(answerArray);
