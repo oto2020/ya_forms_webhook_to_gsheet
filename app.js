@@ -114,12 +114,12 @@ app.post('/webhook', async (req, res) => {
   try {
     let raw = req.body.params?.answer;
     console.log('Читый raw: ', raw);
-    // Убираем кавычки по краям, если есть, и разэкранируем строку
-    if (typeof raw === 'string') {
-      raw = raw.replace(/^"|"$/g, '').replace(/\\"/g, '"');
-    }
+    // // Убираем кавычки по краям, если есть, и разэкранируем строку
+    // if (typeof raw === 'string') {
+    //   raw = raw.replace(/^"|"$/g, '').replace(/\\"/g, '"');
+    // }
 
-    console.log('Разэкранированный raw: ', raw);
+    // console.log('Разэкранированный raw: ', raw);
 
     const parsed = JSON.parse(raw);
 
