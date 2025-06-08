@@ -113,12 +113,17 @@ app.post('/webhook', async (req, res) => {
 
   try {
     let raw = req.body.params?.answer;
+    console.log('Читый raw: ', raw);
     // Убираем кавычки по краям, если есть, и разэкранируем строку
     if (typeof raw === 'string') {
       raw = raw.replace(/^"|"$/g, '').replace(/\\"/g, '"');
     }
 
+    console.log('Разэкранированный raw: ', raw);
+
     const parsed = JSON.parse(raw);
+
+    console.log('Выводим parsed: ', parsed)
     let createdAt = parsed.created;
     let answerData = parsed.answer.data;
     // console.log(JSON.stringify(answerData, null, 2)); // 2 - количество пробелов для отступа
