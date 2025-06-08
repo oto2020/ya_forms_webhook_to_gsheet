@@ -171,6 +171,8 @@ app.post('/webhook', async (req, res) => {
           answerArray.push({ header: 'createdAt', headerRus: 'Дата заполнения', columnNumber, value: createdAt });
         }
 
+        console.log(answerArray);
+
         // ищем ячейки с латиноязычными заголовками
         let headersColumnNumbers = await GoogleProcessor.columnNumbersBySearchValuesInRow(process.env.HEADER_ROW_NUMBER, headers);
         let headerRusArray = await GoogleProcessor.getHeadersRow(process.env.HEADERRUS_ROW_NUMBER);
