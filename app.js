@@ -173,12 +173,11 @@ app.post('/webhook', async (req, res) => {
             answerArray.push({ header: 'createdAt', headerRus: 'Дата заполнения', columnNumber, value: createdAt });
           }
         } catch(e) {
-          console.error('Пиздец, не могу найти createdAt. Вот ошибка:\n', e)
+          console.log('Пиздец, не могу найти createdAt. Вот ошибка:\n', e)
         }
         
 
 
-        console.log(answerArray);
 
         // ищем ячейки с латиноязычными заголовками
         let headersColumnNumbers = await GoogleProcessor.columnNumbersBySearchValuesInRow(process.env.HEADER_ROW_NUMBER, headers);
