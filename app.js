@@ -112,14 +112,21 @@ app.post('/webhook', async (req, res) => {
   console.log('Получены данные от Яндекс Формы:');
 
   try {
-    const parsed = req.body.params?.answer;
-    console.log('Выводим parsed: ', parsed)
+    console.log(req.body.answer);
+    const parsed = req.body.answer; // <--- тут исправлено
+    if (!parsed || typeof parsed !== 'object') {
+      throw new Error('Некорректный формат тела запроса');
+    }
+
+    console.log('Выводим parsed: ', parsed);
+
     let createdAt = parsed.created;
     let answerData = parsed.data;
-    // console.log(JSON.stringify(answerData, null, 2)); // 2 - количество пробелов для отступа
 
-    console.log('createdAt:', parsed.created); // строка ISO
-    console.log('data keys:', Object.keys(parsed.data)); // массив полей формы
+    if (!answerData) {
+      throw new Error('Не найден блок data внутри ответа');
+    }
+
 
     const headers = Object.keys(answerData);
     let sid, gid, tgGroupId;
