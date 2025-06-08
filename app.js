@@ -169,7 +169,7 @@ app.post('/webhook', async (req, res) => {
         // заполним дату создания заявки. она в первом столбце
         let columnNumber = 0;
         try {
-          await GoogleProcessor.columnNumberInRow(process.env.HEADER_ROW_NUMBER, 'createdAt');
+          columnNumber = await GoogleProcessor.columnNumberInRow(process.env.HEADER_ROW_NUMBER, 'createdAt');
           if (columnNumber) {
             createdAt = convertToGoogleSheetsDateTime(createdAt);
             answerArray.push({ header: 'createdAt', headerRus: 'Дата заполнения', columnNumber, value: createdAt });
