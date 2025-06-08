@@ -13,8 +13,8 @@ bot = new TelegramBot(process.env.TELEGRAM_TOKEN, { polling: false });
 
 // Форматирует данные из поля, возвращает одну строку
 function valueStringFromAnswerData(answerData, header) {
-  console.log(header);
-  console.log(answerData);
+  // console.log(header);
+  // console.log(answerData);
   let qv = answerData[header];
   // получаем тип ответа
   let answerType = qv?.question?.answer_type?.slug;
@@ -117,11 +117,11 @@ app.post('/webhook', async (req, res) => {
 
     // 1. Декодируем из base64 в строку
     const jsonString = Buffer.from(base64Encoded, 'base64').toString('utf-8');
-    console.log('Декодированная строка:', jsonString.slice(0, 200)); // ограничим вывод
+    // console.log('Декодированная строка:', jsonString.slice(0, 200)); // ограничим вывод
 
     // 2. Парсим JSON
     const parsed = JSON.parse(jsonString);
-    console.log('parsed:', parsed);
+    // console.log('parsed:', parsed);
 
     // 3. Работаем по прежней логике
     const createdAt = parsed.created;
