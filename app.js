@@ -192,7 +192,7 @@ app.post('/webhook', async (req, res) => {
           let columnNumber = headerColumnNumber.columnNumber;
           let header = headerColumnNumber.value;
           let value = valueStringFromAnswerData(answerData, header);
-          value = removeTelegramFormatting(value);
+          // value = removeTelegramFormatting(value);
           answerArray.push({
             header,                                               // заголовок eng
             headerRus: headerRusArray[columnNumber - 1],          // заголовок rus
