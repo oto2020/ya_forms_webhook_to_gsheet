@@ -140,7 +140,7 @@ app.post('/webhook', async (req, res) => {
     for (let header of headers) {
       let valueString = valueStringFromAnswerData(answerData, header);
 
-      console.log(`header: ${header}\nvalueString: ${valueString}\n`);
+      // console.log(`header: ${header}\nvalueString: ${valueString}\n`);
 
       // если попались gid и sid
       if (header == 'sid') {
@@ -179,7 +179,7 @@ app.post('/webhook', async (req, res) => {
             createdAt = convertToGoogleSheetsDateTime(createdAt);
             answerArray.push({ header: 'createdAt', headerRus: 'Дата заполнения', columnNumber, value: createdAt });
           }
-          console.log({ columnNumber });
+          // console.log({ columnNumber });
         } catch (e) {
           console.error('Пиздец, не могу найти createdAt. Вот ошибка:\n', e)
         }
@@ -207,7 +207,7 @@ app.post('/webhook', async (req, res) => {
         }
 
         // Собранный массив объектов с ответами
-        console.table(answerArray);
+        // console.table(answerArray);
 
 
         // отправим сообщение в телеграм
