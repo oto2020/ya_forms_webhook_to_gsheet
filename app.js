@@ -108,6 +108,12 @@ function removeTelegramFormatting(text) {
     .trim();
 }
 
+function escapeMarkdownV2(text) {
+  return String(text)
+    .replace(/[_*[\]()~`>#+=|{}.!\\-]/g, '\\$&');
+}
+
+
 app.post('/webhook', async (req, res) => {
   console.log('Получены данные от Яндекс Формы:');
 
@@ -208,16 +214,22 @@ app.post('/webhook', async (req, res) => {
         if (tgGroupId) {
           try {
             let messageText =
-              `Ответ с формы *${sheetName}*:\n\n` +
-              answerArray.map(a => `*${a.headerRus}:* ${ removeTelegramFormatting(a.value)}`).join('\n') +
-              `\n\n[Открыть таблицу](${sheetLink})`;
+              `Ответ с формы *${escapeMarkdownV2(sheetName)}*:\n\n` +
+              answerArray
+                .map(a => `*${escapeMarkdownV2(a.headerRus)}:* ${escapeMarkdownV2(a.value)}`)
+                .join('\n') +
+              `\n\n[Открыть таблицу](${escapeMarkdownV2(sheetLink)})`;
+
             await bot.sendMessage(tgGroupId, messageText, {
-              parse_mode: 'Markdown'
+              parse_mode: 'MarkdownV2'
             });
           } catch (e) {
-            bot.sendMessage(tgGroupId, `Получен с формы *${sheetName}*:\n\n...\n\n[Открыть таблицу](${sheetLink})`);
+            bot.sendMessage(tgGroupId, `Получен с формы *${escapeMarkdownV2(sheetName)}*:\n\n...\n\n[Открыть таблицу](${escapeMarkdownV2(sheetLink)})`, {
+              parse_mode: 'MarkdownV2'
+            });
           }
         }
+
 
         // Значения, которые будут записаны на лист sheetName в строку rowNumber
         let valuesRow = expandAnswerArray(answerArray);
