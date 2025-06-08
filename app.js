@@ -164,6 +164,8 @@ app.post('/webhook', async (req, res) => {
 
         // Собираем Массив с овтетами
         let answerArray = [];
+
+
         // заполним дату создания заявки. она в первом столбце
         let columnNumber = 0;
         try {
@@ -172,10 +174,12 @@ app.post('/webhook', async (req, res) => {
             createdAt = convertToGoogleSheetsDateTime(createdAt);
             answerArray.push({ header: 'createdAt', headerRus: 'Дата заполнения', columnNumber, value: createdAt });
           }
-        } catch(e) {
-          console.log('Пиздец, не могу найти createdAt. Вот ошибка:\n', e)
+          console.log({ columnNumber });
+          console.log({ createdAt });
+        } catch (e) {
+          console.error('Пиздец, не могу найти createdAt. Вот ошибка:\n', e)
         }
-        
+
 
 
 
