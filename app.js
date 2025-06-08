@@ -112,20 +112,20 @@ app.post('/webhook', async (req, res) => {
   console.log('Получены данные от Яндекс Формы:');
 
   try {
-    const raw = req.body?.params?.answer;
-    console.log('RAW answer:', raw);
+    const base64Encoded = req.body?.params?.answer;
+    if (!base64Encoded) throw new Error('Нет данных в params.answer');
 
-    const parsed = JSON.parse(raw); // 👈 только один JSON.parse, если строка нормальная
+    // 1. Декодируем из base64 в строку
+    const jsonString = Buffer.from(base64Encoded, 'base64').toString('utf-8');
+    console.log('Декодированная строка:', jsonString.slice(0, 200)); // ограничим вывод
 
+    // 2. Парсим JSON
+    const parsed = JSON.parse(jsonString);
+    console.log('parsed:', parsed);
+
+    // 3. Работаем по прежней логике
     const createdAt = parsed.created;
     const answerData = parsed.answer?.data;
-
-    if (!answerData) {
-      throw new Error('Не найден блок data внутри ответа');
-    }
-
-    console.log('createdAt:', createdAt);
-    console.log('answerData:', answerData);
 
 
 
