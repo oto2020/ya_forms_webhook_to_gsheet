@@ -110,29 +110,25 @@ function removeTelegramFormatting(text) {
 
 app.post('/webhook', async (req, res) => {
   console.log('Получены данные от Яндекс Формы:');
-  console.log('req.body:', JSON.stringify(req.body, null, 2));
 
   try {
-    const rawAnswer = req.body?.params?.answer;
+    const raw = req.body?.params?.answer;
+    console.log('RAW answer:', raw);
 
-    if (!rawAnswer || typeof rawAnswer !== 'string') {
-      throw new Error('Параметр "answer" отсутствует или не строка');
-    }
+    const parsed = JSON.parse(raw); // 👈 только один JSON.parse, если строка нормальная
 
-    const parsed = JSON.parse(rawAnswer); // <-- Ключевое исправление
-
-    const createdAt = parsed?.created;
-    const answerData = parsed?.answer?.data;
+    const createdAt = parsed.created;
+    const answerData = parsed.answer?.data;
 
     if (!answerData) {
       throw new Error('Не найден блок data внутри ответа');
     }
 
     console.log('createdAt:', createdAt);
-    console.log('data keys:', Object.keys(answerData));
+    console.log('answerData:', answerData);
 
 
-    
+
     const headers = Object.keys(answerData);
     let sid, gid, tgGroupId;
     for (let header of headers) {
