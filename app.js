@@ -113,13 +113,14 @@ app.post('/webhook', async (req, res) => {
 
   try {
     const parsed = req.body.params?.answer;
-
     console.log('Выводим parsed: ', parsed)
     let createdAt = parsed.created;
-    let answerData = parsed.answer.data;
+    let answerData = parsed.data;
     // console.log(JSON.stringify(answerData, null, 2)); // 2 - количество пробелов для отступа
 
-    console.log(createdAt);
+    console.log('createdAt:', parsed.created); // строка ISO
+    console.log('data keys:', Object.keys(parsed.data)); // массив полей формы
+
     const headers = Object.keys(answerData);
     let sid, gid, tgGroupId;
     for (let header of headers) {
