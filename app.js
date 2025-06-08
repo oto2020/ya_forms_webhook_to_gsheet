@@ -172,9 +172,10 @@ app.post('/webhook', async (req, res) => {
         let columnNumber = 0;
         try {
           columnNumber = await GoogleProcessor.columnNumberInRow(process.env.HEADER_ROW_NUMBER, 'createdAt');
-          console.log({ createdAt });
           if (columnNumber) {
+            console.log(`вот нормальный createdAt: ${createdAt}`);
             createdAt = convertToGoogleSheetsDateTime(createdAt);
+            console.log(`вот после обработки функцией createdAt: ${createdAt}`);
             answerArray.push({ header: 'createdAt', headerRus: 'Дата заполнения', columnNumber, value: createdAt });
           }
           console.log({ columnNumber });
