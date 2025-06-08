@@ -13,6 +13,8 @@ bot = new TelegramBot(process.env.TELEGRAM_TOKEN, { polling: false });
 
 // Форматирует данные из поля, возвращает одну строку
 function valueStringFromAnswerData(answerData, header) {
+  console.log(header);
+  console.log(answerData);
   let qv = answerData[header];
   // получаем тип ответа
   let answerType = qv?.question?.answer_type?.slug;
