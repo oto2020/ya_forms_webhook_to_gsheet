@@ -192,7 +192,6 @@ app.post('/webhook', async (req, res) => {
           let columnNumber = headerColumnNumber.columnNumber;
           let header = headerColumnNumber.value;
           let value = valueStringFromAnswerData(answerData, header);
-          // value = removeTelegramFormatting(value);
           answerArray.push({
             header,                                               // заголовок eng
             headerRus: headerRusArray[columnNumber - 1],          // заголовок rus
@@ -210,7 +209,7 @@ app.post('/webhook', async (req, res) => {
           try {
             let messageText =
               `Ответ с формы *${sheetName}*:\n\n` +
-              answerArray.map(a => `*${a.headerRus}:* ${a.value}`).join('\n') +
+              answerArray.map(a => `*${a.headerRus}:* ${ removeTelegramFormatting(a.value)}`).join('\n') +
               `\n\n[Открыть таблицу](${sheetLink})`;
             await bot.sendMessage(tgGroupId, messageText, {
               parse_mode: 'Markdown'
