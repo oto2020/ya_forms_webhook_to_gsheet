@@ -167,7 +167,7 @@ app.post('/webhook', async (req, res) => {
 
 
           console.log({ createdAt });
-          console.log(`createdAt: ${createdAt}`);
+          console.log(`вот нормальный вывод createdAt: ${createdAt}`);
         // заполним дату создания заявки. она в первом столбце
         let columnNumber = 0;
         try {
