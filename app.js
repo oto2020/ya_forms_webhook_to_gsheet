@@ -124,8 +124,8 @@ app.post('/webhook', async (req, res) => {
     // console.log('parsed:', parsed);
 
     // 3. Работаем по прежней логике
-    const createdAt = parsed.created;
-    const answerData = parsed.answer?.data;
+    let createdAt = parsed.created;
+    let answerData = parsed.answer?.data;
 
 
 
