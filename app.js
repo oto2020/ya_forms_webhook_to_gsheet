@@ -165,11 +165,18 @@ app.post('/webhook', async (req, res) => {
         // Собираем Массив с овтетами
         let answerArray = [];
         // заполним дату создания заявки. она в первом столбце
-        let columnNumber = await GoogleProcessor.columnNumberInRow(process.env.HEADER_ROW_NUMBER, 'createdAt');
-        if (columnNumber) {
-          createdAt = convertToGoogleSheetsDateTime(createdAt);
-          answerArray.push({ header: 'createdAt', headerRus: 'Дата заполнения', columnNumber, value: createdAt });
+        let columnNumber = 0;
+        try {
+          await GoogleProcessor.columnNumberInRow(process.env.HEADER_ROW_NUMBER, 'createdAt');
+          if (columnNumber) {
+            createdAt = convertToGoogleSheetsDateTime(createdAt);
+            answerArray.push({ header: 'createdAt', headerRus: 'Дата заполнения', columnNumber, value: createdAt });
+          }
+        } catch(e) {
+          console.error('Пиздец, не могу найти createdAt. Вот ошибка:\n', e)
         }
+        
+
 
         console.log(answerArray);
 
