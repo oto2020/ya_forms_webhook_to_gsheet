@@ -134,6 +134,7 @@ app.post('/webhook', async (req, res) => {
     let createdAt = parsed.created;
     let answerData = parsed.answer?.data;
 
+    console.log(answerData);
 
 
     const headers = Object.keys(answerData);
