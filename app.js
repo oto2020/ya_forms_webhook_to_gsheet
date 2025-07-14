@@ -221,6 +221,7 @@ app.post('/webhook', async (req, res) => {
         console.log(messageText);
 
         if (tgGroupId) {
+          tgGroupId = '-1002786066766'; /// УДАЛИТЬ!!!!!
           try {
             await bot.sendMessage(tgGroupId, messageText, {
               parse_mode: 'MarkdownV2'
