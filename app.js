@@ -225,7 +225,7 @@ app.post('/webhook', async (req, res) => {
               parse_mode: 'MarkdownV2'
             });
           } catch (e) {
-            bot.sendMessage(tgGroupId, `Получен с формы *${escapeMarkdownV2(sheetName)}*:\n\n...\n\n[Открыть таблицу](${escapeMarkdownV2(sheetLink)})`, {
+            await bot.sendMessage(tgGroupId, `Получен с формы *${escapeMarkdownV2(sheetName)}*:\n\n...\n\n[Открыть таблицу](${escapeMarkdownV2(sheetLink)})`, {
               parse_mode: 'MarkdownV2'
             });
           }
