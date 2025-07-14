@@ -41,7 +41,7 @@ function valueStringFromAnswerData(answerData, header) {
   }
 
   // В остальных случаях возвращаем значение строки
-  let valueString = qv.value;
+  let valueString = String(qv.value ?? '');
   console.log(valueString);
 
   // Но перед этим поработаем с номером телефона, удалив лишние пробелы и дефисы из него
