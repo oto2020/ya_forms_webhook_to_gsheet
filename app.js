@@ -214,14 +214,13 @@ app.post('/webhook', async (req, res) => {
 
         // отправим сообщение в телеграм
         if (tgGroupId) {
+          let messageText =
+            `Ответ с формы *${escapeMarkdownV2(sheetName)}*:\n\n` +
+            answerArray
+              .map(a => `*${escapeMarkdownV2(a.headerRus)}:* ${escapeMarkdownV2(a.value)}`)
+              .join('\n') +
+            `\n\n[Открыть таблицу](${escapeMarkdownV2(sheetLink)})`;
           try {
-            let messageText =
-              `Ответ с формы *${escapeMarkdownV2(sheetName)}*:\n\n` +
-              answerArray
-                .map(a => `*${escapeMarkdownV2(a.headerRus)}:* ${escapeMarkdownV2(a.value)}`)
-                .join('\n') +
-              `\n\n[Открыть таблицу](${escapeMarkdownV2(sheetLink)})`;
-
             await bot.sendMessage(tgGroupId, messageText, {
               parse_mode: 'MarkdownV2'
             });
@@ -230,6 +229,7 @@ app.post('/webhook', async (req, res) => {
               parse_mode: 'MarkdownV2'
             });
           }
+          console.log(messageText);
         }
 
 
