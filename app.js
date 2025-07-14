@@ -134,7 +134,7 @@ app.post('/webhook', async (req, res) => {
     let createdAt = parsed.created;
     let answerData = parsed.answer?.data;
 
-    console.log(answerData);
+    // console.log(answerData);
 
 
     const headers = Object.keys(answerData);
@@ -186,9 +186,6 @@ app.post('/webhook', async (req, res) => {
           console.error('Пиздец, не могу найти createdAt. Вот ошибка:\n', e)
         }
 
-
-
-
         // ищем ячейки с латиноязычными заголовками
         let headersColumnNumbers = await GoogleProcessor.columnNumbersBySearchValuesInRow(process.env.HEADER_ROW_NUMBER, headers);
         let headerRusArray = await GoogleProcessor.getHeadersRow(process.env.HEADERRUS_ROW_NUMBER);
@@ -213,13 +210,17 @@ app.post('/webhook', async (req, res) => {
 
 
         // отправим сообщение в телеграм
+
+        let messageText =
+          `Ответ с формы *${escapeMarkdownV2(sheetName)}*:\n\n` +
+          answerArray
+            .map(a => `*${escapeMarkdownV2(a.headerRus)}:* ${escapeMarkdownV2(a.value)}`)
+            .join('\n') +
+          `\n\n[Открыть таблицу](${escapeMarkdownV2(sheetLink)})`;
+
+        console.log(messageText);
+
         if (tgGroupId) {
-          let messageText =
-            `Ответ с формы *${escapeMarkdownV2(sheetName)}*:\n\n` +
-            answerArray
-              .map(a => `*${escapeMarkdownV2(a.headerRus)}:* ${escapeMarkdownV2(a.value)}`)
-              .join('\n') +
-            `\n\n[Открыть таблицу](${escapeMarkdownV2(sheetLink)})`;
           try {
             await bot.sendMessage(tgGroupId, messageText, {
               parse_mode: 'MarkdownV2'
@@ -229,7 +230,6 @@ app.post('/webhook', async (req, res) => {
               parse_mode: 'MarkdownV2'
             });
           }
-          console.log(messageText);
         }
 
 
